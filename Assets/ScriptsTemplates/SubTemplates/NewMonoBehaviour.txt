@@ -1,0 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    /* Fields */
+
+//-------------------------------------------------------------------
+    /* Properties */
+
+//-------------------------------------------------------------------
+    /* Messages */
+    void Awake()
+    {
+        
+    }
+
+    void FixedUpdate()
+    {
+        
+    }
+
+//-------------------------------------------------------------------
+    /* Methods */
+
+}
