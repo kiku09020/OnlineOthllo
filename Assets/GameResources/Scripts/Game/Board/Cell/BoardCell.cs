@@ -1,81 +1,77 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Game.Board {
-    using Disk;
-    using Fusion;
+	using Disk;
+	using Fusion;
 
-    /// <summary> 盤のマス </summary>
-    public class BoardCell : SimulationBehaviour {
-        /* Fields */
-        [Header("Generating")]
-        [SerializeField] Disk diskPrefab;
+	/// <summary> 盤のマス </summary>
+	public class BoardCell : NetworkBehaviour {
+		/* Fields */
+		[Header("Generating")]
+		[SerializeField] NetworkPrefabRef diskPrefab;
 
-        [Header("Components")]
-        [SerializeField] Collider col;
+		[Header("Components")]
+		[SerializeField] Collider col;
 
-        Disk diskObj;
+		Disk diskObj;
 
-        //-------------------------------------------------------------------
-        /* Properties */
-        public Vector2Int Position { get; private set; }
-        public DiskState State { get; private set; } = DiskState.empty;
+		//-------------------------------------------------------------------
+		/* Properties */
+		public Vector2Int Position { get; private set; }
 
-        public IBoardCellInputEvents InputProvider { get; private set; }
+		[Networked]
+		public DiskState State { get; private set; } = DiskState.empty;
 
-        //-------------------------------------------------------------------
-        /* Messages */
-        private void Awake()
-        {
-            InputProvider = GetComponent<IBoardCellInputEvents>();
-            InputProvider.ClickedUpEvent += OnClickedUpEventHandler;
-        }
+		public BoardCellInputProvider InputProvider { get; private set; }
 
-        //--------------------------------------------------
-        /* Events */
+		//-------------------------------------------------------------------
+		/* Messages */
+		public override void Spawned()
+		{
+			InputProvider = GetComponent<BoardCellInputProvider>();
+			InputProvider.ClickedUpEvent += OnClickedUpEventHandler;
+		}
 
-
-        //-------------------------------------------------------------------
-        /* Methods */
-        /// <summary> 生成されたときの処理 </summary>
-        public void OnGenerated(Vector2Int pos)
-        {
-            Position = pos;
-        }
-
-        public void SetDiskState(NetworkRunner runner, DiskState state, bool isGeneratedOnStart = false)
-        {
-            // マスの状態をセット
-            if (state == DiskState.empty) return;
-            State = state;
-
-            // 石の生成
-            diskObj = runner.Spawn(diskPrefab, transform.position);
-            diskObj.transform.localScale = new Vector3(1, 1, 1);
-            diskObj.SetDisk(state, !isGeneratedOnStart, true);              // 石の状態セット、アニメーションなど
-
-            //diskObj.OnCompleted += Completed;
-
-            // 選択不可にする
-            InputProvider.IsSelectable = false;
-        }
-
-        //--------------------------------------------------
-        void OnClickedUpEventHandler()
-        {
-            col.enabled = false;
-
-            // 逆の色にする
-            SetDiskState(Runner, DiskState.black);
-        }
-
-        void Completed()
-        {
-            //diskObj.OnCompleted -= Completed;
+		//--------------------------------------------------
+		/* Events */
 
 
-        }
-    }
+		//-------------------------------------------------------------------
+		/* Methods */
+		/// <summary> 生成されたときの処理 </summary>
+		public void OnGenerated(Vector2Int pos)
+		{
+			Position = pos;
+		}
+
+		[Rpc(RpcSources.All, RpcTargets.All)]
+		public void RPC_SetDiskState(DiskState state, bool isGeneratedOnStart = false)
+		{
+			if (Object.HasStateAuthority) {
+				// マスの状態をセット
+				if (state == DiskState.empty) return;
+				State = state;
+
+				// 石の生成
+				diskObj = Runner.Spawn(diskPrefab, transform.position).GetComponent<Disk>();
+				diskObj.transform.SetParent(transform);
+
+				diskObj.SetDisk(state, !isGeneratedOnStart, true);              // 石の状態セット、アニメーションなど
+
+				// 選択不可にする
+				InputProvider.RPC_InvalidateSelectable();
+			}
+		}
+
+		//--------------------------------------------------
+		void OnClickedUpEventHandler()
+		{
+			col.enabled = false;
+
+			// 逆の色にする
+			RPC_SetDiskState(DiskState.black);
+		}
+	}
 }

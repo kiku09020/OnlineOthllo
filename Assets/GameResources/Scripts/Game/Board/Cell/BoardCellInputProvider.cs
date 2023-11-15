@@ -1,90 +1,81 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Board {
-	/// <summary> 入力イベントインターフェース </summary>
-	public interface IBoardCellInputEvents {
-		public event System.Func<bool> OnInitEvent;
-		public event System.Action<bool> SelectedEvent;
-		public event System.Action DeselectedEvent;
-		public event System.Action ClickedDownEvent;
-		public event System.Action ClickedUpEvent;
+    /// <summary> マスの入力クラス </summary>
+    public class BoardCellInputProvider : NetworkBehaviour {
 
-		bool IsSelectable { get; set; }
-	}
+        /* Fields */
+        bool isClicked;
 
-	/// <summary> マスの入力クラス </summary>
-	public class BoardCellInputProvider : MonoBehaviour, IBoardCellInputEvents {
+        //-------------------------------------------------------------------
+        /* Properties */
+        [Networked]
+        public bool IsSelectable { get; private set; } = true;
 
-		/* Fields */
-		bool isClicked;
+        //-------------------------------------------------------------------
+        /* Events */
+        public event System.Func<bool> OnInitEvent;
+        public event System.Action<bool> SelectedEvent;
+        public event System.Action DeselectedEvent;
+        public event System.Action ClickedDownEvent;
+        public event System.Action ClickedUpEvent;
 
-		//-------------------------------------------------------------------
-		/* Properties */
-		public bool IsSelectable { get; set; } = true;
-
-		//-------------------------------------------------------------------
-		/* Events */
-		public event System.Func<bool> OnInitEvent;
-		public event System.Action<bool> SelectedEvent;
-		public event System.Action DeselectedEvent;
-		public event System.Action ClickedDownEvent;
-		public event System.Action ClickedUpEvent;
-
-		//--------------------------------------------------
-		/* Messages */
-		void Awake()
+        //--------------------------------------------------
+        /* Messages */
+		public override void Spawned()
 		{
 			if (OnInitEvent != null)
 				IsSelectable = OnInitEvent.Invoke();
+
+            
 		}
 
-		void Update()
+		private void Update()
 		{
-			// クリックされていたら、常にフラグ立てる
-			if (IsSelectable) {
-				if (Input.GetMouseButton(0)) {
-					isClicked = true;
-				}
+            if (Input.GetMouseButton(0)) {
+                isClicked = true;
+            }
 
-				else if (Input.GetMouseButtonUp(0)) {
-					isClicked = false;
-				}
-			}
+            else if (Input.GetMouseButtonUp(0)) {
+                isClicked = false;
+            }
 		}
 
-		//-------------------------------------------------------------------
-		/* Methods */
-		public void OnSelected()
-		{
-			if (IsSelectable) {
-				SelectedEvent?.Invoke(isClicked);
-			}
-		}
+        //-------------------------------------------------------------------
+        /* Methods */
+        /// <summary> 選択状態を無効化 </summary>
+        public void RPC_InvalidateSelectable()
+        { IsSelectable = false; }
 
-		public void OnDeselected()
-		{
-			if (IsSelectable) {
-				DeselectedEvent?.Invoke();
-			}
-		}
+        public void OnSelected()
+        {
+            if (IsSelectable) {
+                SelectedEvent?.Invoke(isClicked);
+            }
+        }
 
-		public void OnClickedDown()
-		{
-			if (IsSelectable) {
-				ClickedDownEvent?.Invoke();
-			}
-		}
+        public void OnDeselected()
+        {
+            if (IsSelectable) {
+                DeselectedEvent?.Invoke();
+            }
+        }
 
-		public void OnClickedUp()
-		{
-			if (IsSelectable) {
-				ClickedUpEvent?.Invoke();
+        public void OnClickedDown()
+        {
+            if (IsSelectable) {
+                ClickedDownEvent?.Invoke();
+            }
+        }
 
-				// 離されたら無効化
-				IsSelectable = false;
-			}
-		}
-	}
+        public void OnClickedUp()
+        {
+            if (IsSelectable) {
+                ClickedUpEvent?.Invoke();
+            }
+        }
+    }
 }

@@ -36,10 +36,10 @@ namespace Game.Board {
 		{
             boardCells = cellGenerator.GenerateCells(runner, boardSize);
 
-            boardCells[3, 3].SetDiskState(runner, DiskState.white, true);
-            boardCells[4, 3].SetDiskState(runner, DiskState.black, true);
-            boardCells[3, 4].SetDiskState(runner, DiskState.black, true);
-            boardCells[4, 4].SetDiskState(runner, DiskState.white, true);
+            boardCells[3, 3].RPC_SetDiskState(DiskState.white, true);
+            boardCells[4, 3].RPC_SetDiskState(DiskState.black, true);
+            boardCells[3, 4].RPC_SetDiskState(DiskState.black, true);
+            boardCells[4, 4].RPC_SetDiskState(DiskState.white, true);
         }
 	}
 }

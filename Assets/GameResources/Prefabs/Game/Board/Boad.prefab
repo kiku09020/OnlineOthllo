@@ -3481,6 +3481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86d7ec41a3015a4fbb1c2b50bb2f463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 4564386294149742071, guid: 1b2c426bf3e40564f88ad873a08984aa, type: 3}
+  cellPrefab:
+    RawGuidValue: 1b2c426bf3e40564f88ad873a08984aa
   boardTransform: {fileID: 2854955018954337780}
   genStartWorldPos: {x: -3.5, y: 0.3, z: 3.5}

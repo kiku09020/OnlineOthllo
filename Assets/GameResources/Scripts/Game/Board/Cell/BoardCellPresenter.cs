@@ -1,11 +1,11 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Board {
-	public class BoardCellPresenter : MonoBehaviour {
+	public class BoardCellPresenter : NetworkBehaviour {
 		/* Fields */
-		[SerializeField] IBoardCellInputEvents inputProvider;
 		[SerializeField] MeshRenderer rend;
 
 		[Header("Color")]
@@ -14,23 +14,23 @@ namespace Game.Board {
 
 		//-------------------------------------------------------------------
 		/* Properties */
-
+		public BoardCellInputProvider InputProvider { get; private set; }
 		//-------------------------------------------------------------------
 		/* Messages */
 
 		//-------------------------------------------------------------------
 		/* Methods */
-		private void Awake()
+		public override void Spawned()
 		{
 			rend.enabled = false;
 			rend.material.color = defaultColor;
 
-			inputProvider = GetComponent<IBoardCellInputEvents>();
+			InputProvider = GetComponent<BoardCellInputProvider>();
 
-			inputProvider.SelectedEvent += SelectedEventHandler;
-			inputProvider.DeselectedEvent += DeselectedEventHandler;
-			inputProvider.ClickedDownEvent += ClickedDownEvnetHandler;
-			inputProvider.ClickedUpEvent += ClickedUpEvnetHandler;
+			InputProvider.SelectedEvent += SelectedEventHandler;
+			InputProvider.DeselectedEvent += DeselectedEventHandler;
+			InputProvider.ClickedDownEvent += ClickedDownEvnetHandler;
+			InputProvider.ClickedUpEvent += ClickedUpEvnetHandler;
 		}
 
 		void SelectedEventHandler(bool isClicked)

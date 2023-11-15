@@ -928,6 +928,8 @@ GameObject:
   - component: {fileID: 1072476803}
   - component: {fileID: 1072476804}
   - component: {fileID: 1072476805}
+  - component: {fileID: 1072476807}
+  - component: {fileID: 1072476806}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -975,7 +977,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardManager: {fileID: 5158493659650940067}
+  turnManager: {fileID: 1072476807}
+  playerObjectPrefab:
+    RawGuidValue: e582422c33aa5e541b3a974c177ec3f0
+  playerParent: {fileID: 1169024745}
   runnerPrefab: {fileID: 5219015700562638285, guid: 58f26321b947b3146865517d018fe561, type: 3}
+--- !u!114 &1072476806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072476802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: c529320473ba448ea29d9c45c95e3d5d
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1072476807}
+  SimulationBehaviours: []
+--- !u!114 &1072476807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072476802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c7fc6a541421a47b577985886cad03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  isSetTurnOrder: 0
+  _MasterIsFirst: 0
 --- !u!1 &1091497449
 GameObject:
   m_ObjectHideFlags: 0

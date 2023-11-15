@@ -15,4 +15,4 @@ MonoBehaviour:
   templateDirPath: Assets/ScriptsTemplates/SubTemplates/
   templateFileExtension: .txt
   createdFileExtension: .cs
-  enableDebugLog: 1
+  enableDebugLog: 0
