@@ -23,7 +23,7 @@ namespace Game.Player {
 		/* Properties */
 		private void Awake()
 		{
-			player.OnInit += OnSetData;
+			player.OnSetDataSync += OnSetData;
 		}
 		//-------------------------------------------------------------------
 		/* Messages */
@@ -32,8 +32,9 @@ namespace Game.Player {
 		/* Methods */
 		public void OnSetData(PlayerNetworkData data)
 		{
-			playerNameText.text = data.NickName;
-			playerTurnOrderText.text = (data.IsFirstTurn) ? "æU" : "ŒãU";
+            playerNameText.text = player.PersonalName;
+
+            playerTurnOrderText.text = (data.IsFirstTurn) ? "æU" : "ŒãU";
 
 			// ‡”Ô‚É‰‚¶‚Ä”wŒiF•ÏX
 			backImage.color = (data.IsFirstTurn) ? firstColor : secoundColor;

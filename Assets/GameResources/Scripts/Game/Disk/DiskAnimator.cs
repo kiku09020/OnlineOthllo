@@ -4,43 +4,61 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Disk {
-	public class DiskAnimator : MonoBehaviour {
-		/* Fields */
-		[SerializeField] float flipAnimDuration = .5f;
-		[SerializeField] Ease flipAnimeEase;
-		[SerializeField] float flipUpAnimEndValue = 1;
-		[SerializeField] Ease flipUpAnimEase;
+    public class DiskAnimator : MonoBehaviour {
+        /* Fields */
 
-		//-------------------------------------------------------------------
-		/* Properties */
+        [Header("SetAnim")]
+        [SerializeField] float setAnimStartPosY = 1;
+        [SerializeField] float setAnimDuration = .5f;
+        [SerializeField] Ease setAnimEase;
 
-		//-------------------------------------------------------------------
-		/* Messages */
-		void Awake()
-		{
+        [Header("FlipAnim")]
+        [SerializeField] float flipAnimDuration = .5f;
+        [SerializeField] Ease flipAnimeEase;
+        [SerializeField] float flipUpAnimEndValue = 1;
+        [SerializeField] Ease flipUpAnimEase;
 
-		}
+        //-------------------------------------------------------------------
+        /* Properties */
 
-		void FixedUpdate()
-		{
+        //-------------------------------------------------------------------
+        /* Messages */
+        void Awake()
+        {
 
-		}
+        }
 
-		//-------------------------------------------------------------------
-		/* Methods */
-		public void PlayFlipAnim(Quaternion targetRotate, System.Action onComplete)
-		{
-			Sequence sequence = DOTween.Sequence();
-			var rotateTween = transform.DORotate(targetRotate.eulerAngles, flipAnimDuration)
-				.SetEase(flipAnimeEase);
+        void FixedUpdate()
+        {
 
-			var upTween = transform.DOMoveY(flipUpAnimEndValue, flipAnimDuration / 2)
-				.SetEase(flipUpAnimEase)
-				.SetLoops(2, LoopType.Yoyo);
+        }
 
-			sequence.Append(rotateTween)
-				.Join(upTween)
-				.OnComplete(() => onComplete?.Invoke());
-		}
-	}
+        //-------------------------------------------------------------------
+        /* Methods */
+        public void PlaySetAnim(Quaternion targetRotate, System.Action onComplete)
+        {
+            var animEndPosY = transform.position.y;
+
+            transform.rotation = targetRotate;
+            transform.position = new Vector3(transform.position.x, setAnimStartPosY,transform.position.z);
+
+            transform.DOMoveY(animEndPosY, setAnimDuration)
+                .SetEase(setAnimEase);
+        }
+
+        public void PlayFlipAnim(Quaternion targetRotate, System.Action onComplete)
+        {
+            Sequence sequence = DOTween.Sequence();
+            var rotateTween = transform.DORotate(targetRotate.eulerAngles, flipAnimDuration)
+                .SetEase(flipAnimeEase);
+
+            var upTween = transform.DOMoveY(flipUpAnimEndValue, flipAnimDuration / 2)
+                .SetEase(flipUpAnimEase)
+                .SetLoops(2, LoopType.Yoyo);
+
+            sequence.Append(rotateTween)
+                .Join(upTween)
+                .OnComplete(() => onComplete?.Invoke());
+        }
+    }
 }

@@ -47,7 +47,7 @@ namespace Game.Board {
         //-------------------------------------------------------------------
         /* Methods */
         /// <summary> ‘I‘ğó‘Ô‚ğ–³Œø‰» </summary>
-        public void RPC_InvalidateSelectable()
+        public void InvalidateSelectable()
         { IsSelectable = false; }
 
         public void OnSelected()

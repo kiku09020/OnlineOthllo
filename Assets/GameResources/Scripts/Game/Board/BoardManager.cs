@@ -19,6 +19,9 @@ namespace Game.Board {
 		BoardCell[,] boardCells = new BoardCell[row, col];
 		Vector2Int boardSize = new Vector2Int(row, col);
 
+		int whiteDiskCount;
+		int blackDiskCount;
+
 		//-------------------------------------------------------------------
 		/* Properties */
 

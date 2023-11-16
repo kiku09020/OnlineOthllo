@@ -5,9 +5,10 @@ using UnityEngine;
 namespace Game.Board {
 	using Disk;
 	using Fusion;
+    using Game.Player;
 
-	/// <summary> 盤のマス </summary>
-	public class BoardCell : NetworkBehaviour {
+    /// <summary> 盤のマス </summary>
+    public class BoardCell : NetworkBehaviour {
 		/* Fields */
 		[Header("Generating")]
 		[SerializeField] NetworkPrefabRef diskPrefab;
@@ -58,10 +59,13 @@ namespace Game.Board {
 				diskObj = Runner.Spawn(diskPrefab, transform.position).GetComponent<Disk>();
 				diskObj.transform.SetParent(transform);
 
-				diskObj.SetDisk(state, !isGeneratedOnStart, true);              // 石の状態セット、アニメーションなど
+				diskObj.SetDisk(state, !isGeneratedOnStart);              // 石の状態セット、アニメーションなど
 
 				// 選択不可にする
-				InputProvider.RPC_InvalidateSelectable();
+				InputProvider.InvalidateSelectable();
+
+				// ターン変更
+				
 			}
 		}
 

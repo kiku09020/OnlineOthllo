@@ -4,62 +4,77 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Disk {
-	public enum DiskState {
-		empty,
-		black,
-		white,
-	}
+    public enum DiskState {
+        empty,
+        black,
+        white,
+    }
 
-	/// <summary> 石 </summary>
-	public class Disk : NetworkBehaviour {
-		/* Fields */
-		bool isBlack;
+    /// <summary> 石 </summary>
+    public class Disk : NetworkBehaviour {
+        /* Fields */
+        bool isBlack;
 
-		[SerializeField] DiskAnimator animator;
-		//-------------------------------------------------------------------
-		/* Properties */
+        [SerializeField] DiskAnimator animator;
+        //-------------------------------------------------------------------
+        /* Properties */
 
-		//-------------------------------------------------------------------
-		/* Events */
-		public event System.Action OnCompleted;
+        //-------------------------------------------------------------------
+        /* Events */
+        public event System.Action OnCompletedSet;
+        public event System.Action OnCompletedFlip;
 
-		//-------------------------------------------------------------------
-		/* Methods */
-		public void SetDisk(DiskState state, bool aniamted, bool isLastDisk = false)
-		{
-			isBlack = (state == DiskState.black) ? true : false;
+        //-------------------------------------------------------------------
+        /* Methods */
+        public void SetDisk(DiskState state, bool aniamted = true)
+        {
+            isBlack = (state == DiskState.black) ? true : false;
 
-			Flip(isLastDisk, aniamted);
-		}
+            if (aniamted) {
+                animator.PlaySetAnim(GetTargetRotate(false), () => {
+                    OnCompletedSet?.Invoke();
+                });
+            }
 
-		// 裏返し処理
-		void Flip(bool isLastDisk = false, bool animated = false)
-		{
-			// アニメーションつき
-			if (animated) {
-				animator.PlayFlipAnim(GetTargetRotate(), () => {
-					if (isLastDisk) {
-						OnCompleted?.Invoke();
-					}
-				});
-			}
+            else {
+                transform.rotation = GetTargetRotate(false);
+                OnCompletedSet?.Invoke();
+            }
+        }
 
-			// アニメーションなし
-			else {
-				transform.rotation = GetTargetRotate();
-			}
-		}
+        // 裏返し処理
+        void Flip(bool isLastDisk = false, bool animated = false)
+        {
+            // アニメーションつき
+            if (animated) {
+                animator.PlayFlipAnim(GetTargetRotate(true), () => {
+                    if (isLastDisk) {
+                        OnCompletedFlip?.Invoke();
+                    }
+                });
+            }
 
-		// 目標回転クォータニオン取得
-		Quaternion GetTargetRotate()
-		{
-			Quaternion rotation = Quaternion.identity;
+            // アニメーションなし
+            else {
+                transform.rotation = GetTargetRotate(true);
+            }
+        }
 
-			if (isBlack) {
-				rotation = new Quaternion(0, 0, 180, 0);
-			}
+        // 目標回転クォータニオン取得
+        Quaternion GetTargetRotate(bool isFliped)
+        {
+            Quaternion rotation = Quaternion.identity;
 
-			return rotation;
-		}
-	}
+            if (!isBlack) {
+                rotation = new Quaternion(0, 0, 180, 0);
+            }
+
+            // 反転
+            if (isFliped) {
+                rotation = Quaternion.AngleAxis(180, Vector3.forward);
+            }
+
+            return rotation;
+        }
+    }
 }

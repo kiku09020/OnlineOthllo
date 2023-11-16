@@ -14,9 +14,6 @@ namespace GameController.Game {
 		/// <summary> ターン数 </summary>
 		public int TurnCount { get; private set; }
 
-		/// <summary> マスターが先攻か </summary>
-		[Networked] public bool MasterIsFirst { get; private set; }
-
 		//--------------------------------------------------
 		/* Events */
 		public event System.Action OnTurnStart;
@@ -61,14 +58,6 @@ namespace GameController.Game {
 
 			// ターン順決めない(debug)
 			else {
-				//if (runner.TryGetPlayerObject(player, out var plObj)) {
-				//	plObj.GetComponent<PlayerNetworkData>().IsFirstTurn = runner.IsSharedModeMasterClient;
-				//}
-
-				//else {
-				//	Debug.LogError("プレイヤーオブジェクトがありません");
-				//}
-
 				bool isLocalPlayer = (player == runner.LocalPlayer);
 
 				return (runner.IsSharedModeMasterClient) ? isLocalPlayer : !isLocalPlayer;
