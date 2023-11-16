@@ -53,17 +53,14 @@ namespace GameController.Online {
             var playerUIObj = runner.Spawn(playerObjectPrefab);
             runner.SetPlayerObject(runner.LocalPlayer, playerUIObj);
 
+            // 全てのプレイヤーオブジェクトが生成されるまで待機  
+            foreach (var player in runner.ActivePlayers) {
+                await UniTask.WaitUntil(() => runner.TryGetPlayerObject(player, out var playerObj));
+            }
 
             // 各プレイヤーの設定
             foreach (var player in runner.ActivePlayers) {
-                await UniTask.WaitUntil(() => {
-                    if (runner.TryGetPlayerObject(player, out var playerObj)) {
-                        SpawnPlayerObject(playerObj, player);
-                        return true;
-                    }
-
-                    return false;
-                });
+                SpawnPlayerObject(runner.GetPlayerObject(player), player);
             }
 
             // マスタークライアントが接続されたら生成
@@ -112,7 +109,7 @@ namespace GameController.Online {
             var playerObj = playerUIObj.GetComponent<PlayerObject>();
 
             // ターン順決める
-            playerObj.NetworkData.IsFirstTurn = turnManager.SetTurnOrder(runner, player);
+            playerObj.IsFirstTurn = turnManager.SetTurnOrder(runner, player);
 
 
             // 自身のとき、左下に表示

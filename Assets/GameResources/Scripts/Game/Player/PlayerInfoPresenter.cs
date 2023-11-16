@@ -34,10 +34,10 @@ namespace Game.Player {
 		{
             playerNameText.text = player.PersonalName;
 
-            playerTurnOrderText.text = (data.IsFirstTurn) ? "æU" : "ŒãU";
+            playerTurnOrderText.text = (player.IsFirstTurn) ? "æU" : "ŒãU";
 
 			// ‡”Ô‚É‰‚¶‚Ä”wŒiF•ÏX
-			backImage.color = (data.IsFirstTurn) ? firstColor : secoundColor;
+			backImage.color = (player.IsFirstTurn) ? firstColor : secoundColor;
 		}
 	}
 }
