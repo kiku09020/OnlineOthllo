@@ -1993,6 +1993,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92f1daec96a768046ac0bdf35f685284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  setAnimStartPosY: 1
+  setAnimDuration: 0.4
+  setAnimEase: 27
   flipAnimDuration: 0.5
   flipAnimeEase: 0
   flipUpAnimEndValue: 1

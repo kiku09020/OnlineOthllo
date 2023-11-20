@@ -21,10 +21,16 @@ namespace Game.Board {
 
         //-------------------------------------------------------------------
         /* Properties */
+        /// <summary> マスの位置 </summary>
         public Vector2Int Position { get; private set; }
 
+        /// <summary> マスの状態 </summary>
         [Networked]
         public DiskState State { get; private set; } = DiskState.empty;
+
+        /// <summary> 配置可能か </summary>
+        [Networked]
+        public bool IsPuttable { get; private set; }
 
         public BoardCellInputProvider InputProvider { get; private set; }
 
@@ -32,13 +38,16 @@ namespace Game.Board {
         /* Messages */
         public override void Spawned()
         {
+            col.enabled = false;
+
             InputProvider = GetComponent<BoardCellInputProvider>();
             InputProvider.ClickedUpEvent += OnClickedUpEventHandler;
         }
 
         //--------------------------------------------------
         /* Events */
-
+        /// <summary> ボード確認されたときのイベント </summary>
+        public event System.Action<bool> OnChecked;
 
         //-------------------------------------------------------------------
         /* Methods */
@@ -46,6 +55,19 @@ namespace Game.Board {
         public void OnGenerated(Vector2Int pos)
         {
             Position = pos;
+        }
+
+        /// <summary> 配置可能 </summary>
+
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void RPC_SetPuttable(bool value)
+        {
+            if (Object.HasStateAuthority) {
+                IsPuttable = value;
+                col.enabled = value;
+
+                OnChecked?.Invoke(value);
+            }
         }
 
         [Rpc(RpcSources.All, RpcTargets.All)]
@@ -92,9 +114,7 @@ namespace Game.Board {
                 var playerObj = Runner.GetPlayerObject(player).GetComponent<PlayerObject>();
 
                 if (playerObj.HasStateAuthority) {
-                    var isBlack = playerObj.IsFirstTurn;
-                    var diskState = (isBlack) ? DiskState.black : DiskState.white;
-                    RPC_SetDiskState(diskState);
+                    RPC_SetDiskState(playerObj.PlayersDiskState);
                 }
             }
         }

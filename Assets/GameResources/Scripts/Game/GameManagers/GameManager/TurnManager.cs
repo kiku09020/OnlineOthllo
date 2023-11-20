@@ -1,13 +1,16 @@
+using Cysharp.Threading.Tasks;
 using Fusion;
 using Game.Player;
+using GameController.Online;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameController.Game {
-	public class TurnManager : NetworkBehaviour {
+	public class TurnManager : MonoBehaviour {
 		/* Fields */
 		[SerializeField, Tooltip("ターン順を決めるかどうか")] bool isSetTurnOrder = true;
+		[SerializeField] PlayerManager playerManager;
 
 		//-------------------------------------------------------------------
 		/* Properties */
@@ -16,27 +19,37 @@ namespace GameController.Game {
 
 		//--------------------------------------------------
 		/* Events */
-		public event System.Action OnTurnStart;
-		public event System.Action OnTurnEnd;
+		public event System.Action<PlayerObject> OnTurnStart;
+		public event System.Action<PlayerObject> OnTurnEnd;
 
 		//-------------------------------------------------------------------
 		/* Messages */
+		private async void Awake()
+		{
+			playerManager.OnSetTurnOrder += SetTurnOrder;
 
+			await UniTask.WaitUntil(() => OnTurnStart != null);
+
+			playerManager.OnSetData +=(player)=>{
+				player.OnTurnStart += OnTurnStart;
+				player.OnTurnEnd += OnTurnEnd;
+			};
+		}
 
 		//-------------------------------------------------------------------
 		/* Methods */
 		/// <summary> ターン開始処理 </summary>
-		public void TurnStart()
+		public void TurnStart(PlayerObject player)
 		{
 			TurnCount++;
 
-			OnTurnStart?.Invoke();
+			OnTurnStart?.Invoke(player);
 		}
 
 		/// <summary> ターン終了処理 </summary>
-		public void TurnEnd()
+		public void TurnEnd(PlayerObject player)
 		{
-			OnTurnEnd?.Invoke();
+			OnTurnEnd?.Invoke(player);
 		}
 
 		//--------------------------------------------------

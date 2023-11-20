@@ -253,7 +253,7 @@ MonoBehaviour:
     RawGuidValue: d88a778607cd2e94bbd844b4f4a9990a
   col: {fileID: 7544885945281949853}
   _State: 0
-  _InputProvider: {fileID: 0}
+  _IsPuttable: 0
 --- !u!114 &6694481217756314343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,9 +268,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   rend: {fileID: 4246830533661413574}
-  clickedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  boardCell: {fileID: 4564386294149742071}
   defaultColor: {r: 0, g: 0.7486813, b: 1, a: 1}
-  _InputProvider: {fileID: 0}
+  selectedColor: {r: 0.7216981, g: 0.9301517, b: 1, a: 1}
+  clickedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &8196873053578949975
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1398479539079683326}
   - component: {fileID: 1589031086010214532}
   - component: {fileID: 5094238349530418160}
+  - component: {fileID: 8801987337661609142}
   m_Layer: 0
   m_Name: Boad
   m_TagString: Untagged
@@ -3468,7 +3469,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ea5606efa74dfa48a0515af965b8f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   cellGenerator: {fileID: 5094238349530418160}
+  turnManager: {fileID: 0}
 --- !u!114 &5094238349530418160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3485,3 +3488,27 @@ MonoBehaviour:
     RawGuidValue: 1b2c426bf3e40564f88ad873a08984aa
   boardTransform: {fileID: 2854955018954337780}
   genStartWorldPos: {x: -3.5, y: 0.3, z: 3.5}
+--- !u!114 &8801987337661609142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914098768888493351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 40e8e83cd91fe1b4f93b983f3ee8584a
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1589031086010214532}
+  SimulationBehaviours: []

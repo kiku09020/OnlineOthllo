@@ -7,10 +7,12 @@ namespace Game.Board {
 	public class BoardCellPresenter : NetworkBehaviour {
 		/* Fields */
 		[SerializeField] MeshRenderer rend;
+		[SerializeField] BoardCell boardCell;
 
 		[Header("Color")]
-		[SerializeField] Color clickedColor = Color.yellow;
 		[SerializeField] Color defaultColor = Color.white;
+		[SerializeField] Color selectedColor = Color.white;
+		[SerializeField] Color clickedColor = Color.yellow;
 
 		//-------------------------------------------------------------------
 		/* Properties */
@@ -27,6 +29,7 @@ namespace Game.Board {
 
 			InputProvider = GetComponent<BoardCellInputProvider>();
 
+			boardCell.OnChecked += (value) => rend.enabled = value;
 			InputProvider.SelectedEvent += SelectedEventHandler;
 			InputProvider.DeselectedEvent += DeselectedEventHandler;
 			InputProvider.ClickedDownEvent += ClickedDownEvnetHandler;
@@ -35,15 +38,12 @@ namespace Game.Board {
 
 		void SelectedEventHandler(bool isClicked)
 		{
-			rend.enabled = true;
-
 			// クリック中に選択されている場合、選択色にする
-			rend.material.color = (isClicked) ? clickedColor : defaultColor;
+			rend.material.color = (isClicked) ? clickedColor : selectedColor;
 		}
 
 		void DeselectedEventHandler()
 		{
-			rend.enabled = false;
 			rend.material.color = defaultColor;
 		}
 

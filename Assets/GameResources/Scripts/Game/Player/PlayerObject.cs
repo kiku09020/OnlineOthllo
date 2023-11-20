@@ -1,4 +1,5 @@
 using Fusion;
+using Game.Disk;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,17 +34,24 @@ namespace Game.Player {
         [Networked]
         public bool IsFirstTurn { get; set; }
 
+        public DiskState PlayersDiskState => IsFirstTurn ? DiskState.black : DiskState.white;
+
         /// <summary> é©ï™ÇÃêŒÇÃêî </summary>
         public int DiskCount { get; private set; }
 
         //-------------------------------------------------------------------
         /* Event */
         public event System.Action<PlayerNetworkData> OnSetDataSync;
+        public event System.Action<PlayerObject> OnTurnStart;
+        public event System.Action<PlayerObject> OnTurnEnd;
+
 
         private void Awake()
         {
             raycaster = Camera.main.GetComponent<PhysicsRaycaster>();
             raycaster.enabled = false;
+
+            
         }
 
         public override void Spawned()
@@ -75,6 +83,8 @@ namespace Game.Player {
         public void RPC_ToggleOperable()
         {
             ToggleOperable();
+
+            OnTurnStart?.Invoke(this);
         }
 
         public void ToggleOperable()
